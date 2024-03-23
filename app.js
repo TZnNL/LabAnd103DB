@@ -6,10 +6,15 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/useRoutes');
+var distributorRouter = require('./routes/distributorRoutes');
+var FruitRouter = require('./routes/fruitRoutes');
+var uploadRouter = require('./routes/uploadRoutes');
+var emailRouter = require('./routes/mailRoutes');
 
 var app = express();
 
-const database = require('./config/db')
+const database = require('./config/db');
+const fruit = require('./models/fruit');
 database.connect()
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -23,6 +28,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/distributors', distributorRouter);
+app.use('/fruit', FruitRouter);
+app.use('/uploads', uploadRouter);
+app.use('/mail', emailRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

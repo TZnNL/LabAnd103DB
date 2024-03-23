@@ -62,12 +62,49 @@ router.get('/getbyid/:id', async (req, res) => {
         }
     } catch (error) {
         if (error.name === 'CastError') {
-            res.status(404).send('Invalid ID format');
+            res.status(404).send('User not found');
         } else {
             console.log(error);
             res.status(500).send('Internal server error');
         }
     }
 });
+router.patch('/edit/:id', async(req,res)=>{
+    try {
+        const result = await modelUser.findByIdAndUpdate(req.params.id, req.body)
+        if (result) {
+            const rs = await result.save()
+            res.send(rs)
+        } else {
+            res.json({
+                "data": [],
+                'message': 'requesst update by id failed',
+                'status': 400
+            })
+        }
+    } catch (error) {
+        console.log(error , 'failed update by id');
+    }
+})
 
+router.delete('/delete/:id', async (req,res) =>{
+    try {
+        const result = await modelUser.findByIdAndDelete(req.params.id)
+        if (result) {
+            res.json({
+                'status': 200,
+                'message': 'deleted user',
+                'data': result
+            })
+        } else {
+            res.json({
+                'status': 400,
+                'message': 'not found user',
+                'data': []
+            })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
 module.exports = router;
